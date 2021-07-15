@@ -5,6 +5,40 @@ kaboom({
     debug: true,
     clearColor: [0, 0, 0, 1],
   });
+
+  //Buttons
+
+  function addButton(txt, p, f) {
+  
+    const bg = add([
+      pos(p),
+      rect(60, 30),
+      origin("center"),
+      color(1, 1, 1),
+    ]);
+
+    add([
+      text(txt),
+      pos(p),
+      origin("center"),
+      color(0, 0, 0),
+    ]);
+
+    bg.action(() => {
+      if (bg.isHovered()) {
+        bg.color = rgb(0.8, 0.8, 0.8);
+        if (mouseIsClicked()) {
+          f();
+        }
+      } else {
+        bg.color = rgb(1, 1, 1);
+      }
+    });
+
+  }
+  function visitPage(){
+    window.location='https://wonderful-ardinghelli-01f24f.netlify.app/';
+}
   
   // Speed identifiers
   const MOVE_SPEED = 120;
@@ -37,6 +71,21 @@ kaboom({
   loadSprite("blue-evil-shroom", "images/blue-evil-shroom.png");
   loadSprite("blue-surprise", "images/blue-surprise.png");
   
+  scene("main", () => {
+
+    
+    addButton("start", vec2(100, 100), () => {
+      go("game", { level: 0, score: 0 })
+    });
+  
+    addButton("quit", vec2(100, 150), () => {
+      visitPage();
+    });
+  
+  });
+  
+  start("main");
+
   scene("game", ({ level, score }) => {
     layers(["bg", "obj", "ui"], "obj");
   
@@ -254,8 +303,13 @@ kaboom({
     });
   });
   
+  
   scene("lose", ({ score }) => {
     add([text(score, 32), origin("center"), pos(width() / 2, height() / 2)]);
+    
+      addButton("back", vec2(100, 100), () => {
+        go("main")
+      });
   });
   
   start("game", { level: 0, score: 0 });
